@@ -44,4 +44,25 @@
 - 3、代理，如果有的话。
 
 ## 数据分析
-todo。。。
+
+### 知乎
+`data_analysis.py`
+- 提取神回复
+    - 处理逻辑：使用pandas读取爬取的问题和答案，筛选出答案字符数少于20，并且按点赞数从高往低排序，最后输出到xls。
+
+- 坑与建议
+    - 1、pandas的筛选，网上有些说用loc函数，有时候会提示typeError。  
+    ```
+    df1.loc([df1['len']<200])  
+    Traceback (most recent call last):
+    File "<input>", line 1, in <module>
+    File "/Users/icbc/Desktop/git/ML-and-DM-in-action-master/DouBanMovie/venv/lib/python3.6/site-packages/pandas/core/indexing.py", line 98, in __call__
+        axis = self.obj._get_axis_number(axis)
+    File "/Users/icbc/Desktop/git/ML-and-DM-in-action-master/DouBanMovie/venv/lib/python3.6/site-packages/pandas/core/generic.py", line 365, in _get_axis_number
+        axis = self._AXIS_ALIASES.get(axis, axis)
+    TypeError: unhashable type: 'list'
+    ```  
+    直接用如下方式就可以筛选了  
+    `df[df.answer.str.len() < 20]`
+
+    - 2、todo。。。
