@@ -48,11 +48,11 @@ def parse_json(data):
     answer = ''
     for ans in res['data']:
         soup = BeautifulSoup(ans['content'], features='html.parser')
-        contents = soup.find_all('p')
-        for content in contents:
-            if content.text.strip() != '':
-                answer += content.text.strip()
-        # answer += ans['content']
+        answer = soup.text.strip().replace('\n','。')
+        # contents = soup.find_all('p')
+        # for content in contents:
+        #     if content.text.strip() != '':
+        #         answer += content.text.strip()
     write_txt(answer + '\n')
     return get_next_url(res)
 
