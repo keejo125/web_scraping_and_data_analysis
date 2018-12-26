@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from urllib import request
 import requests
 from bs4 import BeautifulSoup
 import csv
