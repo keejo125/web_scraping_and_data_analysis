@@ -55,3 +55,8 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# 结果文件
+*.txt
+*.csv
+*.xls
