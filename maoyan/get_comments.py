@@ -2,11 +2,18 @@
 # author：zhengk
 import requests
 import json
-from time import sleep
+import time
 import random
+import logging
 from fake_useragent import UserAgent
 
-ua = UserAgent(use_cache_server=False, verify_ssl=False)
+logging.basicConfig(level=logging.INFO,#控制台打印的日志级别
+                    filename='maoyan.log',
+                    filemode='a',##模式，有w和a，w就是写模式，每次都会重新写日志，覆盖之前的日志
+                    format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s' #日志格式
+                    )
+
+ua = UserAgent(verify_ssl=False, use_cache_server=False)
 count = 1
 # 每次抓取评论数，猫眼最大支持30
 limit = 30
@@ -55,23 +62,22 @@ def parse_json(data):
     ts_duration = ts
     res = json.loads(data)
     comments = res['data']['comments']
-    for commnet in comments:
-        time = commnet['time']
+    for comment in comments:
+        comment_time = comment['time']
         if ts == 0:
-            ts = time
-            ts_duration = time
-        if time != ts and ts == ts_duration:
-            ts_duration = time
-        if time !=ts_duration:
+            ts = comment_time
+            ts_duration = comment_time
+        if comment_time != ts and ts == ts_duration:
+            ts_duration = comment_time
+        if comment_time !=ts_duration:
             ts = ts_duration
             offset = 0
             return get_url()
         else:
-            content = commnet['content'].strip().replace('\n', '。')
-            time = commnet['time']
-            print('get comment ' + str(count))
+            content = comment['content'].strip().replace('\n', '。')
+            logging.info('get comment ' + str(count))
             count += 1
-            write_txt(content + '\n')
+            write_txt(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment_time/1000)) + '##' + content + '\n')
     if res['paging']['hasMore']:
         offset += limit
         return get_url()
@@ -80,7 +86,7 @@ def parse_json(data):
 
 
 if __name__ == '__main__':
-    print('start get comment')
+    logging.info('start get comment')
     url = get_url()
     while True:
         try:
@@ -89,8 +95,8 @@ if __name__ == '__main__':
             if data:
                 url = parse_json(data)
                 if not url:
-                    print('end')
+                    logging.info('end')
                     break
         except Exception as e:
-            print(e)
-            sleep(random.random() * 3)
+            logging.exception("程序异常")
+            time.sleep(random.random() * 3)
