@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # author：zhengk
 import re
+import csv
 
 
 # 输出分词及对应次数
@@ -9,14 +10,16 @@ def wordCount():
     # jieba.load_userdict('../myDict/myDict.txt')
     # jieba.analyse.set_stop_words("../myDict/stop_words.txt")
     word_list=[]
-    for line in open('comment.txt'):
-        try:
-            msg = re.sub("[\s+\.\!\/_,$%^*()+\"\'\?]+|[+——！，。？、~@#￥%……&*（）【】；：]+|\[.+\]|\［.+\］", "", line.split('##')[1])
-            tags = jieba.analyse.extract_tags(msg)
-            for t in tags:
-                word_list.append(t)
-        except Exception as e:
-            print(e)
+    with open('comment.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+        for row in reader:
+            try:
+                tags = jieba.analyse.extract_tags(row[1])
+                for t in tags:
+                    word_list.append(t)
+            except Exception as e:
+                print(row)
+                print(e)
     word_dict={}
     for word in word_list:
         if word not in word_dict:
@@ -41,7 +44,7 @@ def wordCloud(wordList):
     my_wordcloud = WordCloud(background_color="white",
                              max_words=500, mask=alice_coloring,
                              max_font_size=200, random_state=42,
-                             font_path=(os.path.join(d, "../font/msyh.ttf")))
+                             font_path=(os.path.join(d, "../font/PingFang.ttc")))
     my_wordcloud = my_wordcloud.generate_from_frequencies(wordList)
 
     image_colors = ImageColorGenerator(alice_coloring)
@@ -51,7 +54,7 @@ def wordCloud(wordList):
     plt.axis("off")
     # 通过设置subplots_adjust来控制画面外边框
     plt.subplots_adjust(bottom=.01, top=.99, left=.01, right=.99)
-    plt.savefig("jupiter_wordcloud.png")
+    plt.savefig("jupiter_wordcloud_1.png")
     plt.show()
 
 

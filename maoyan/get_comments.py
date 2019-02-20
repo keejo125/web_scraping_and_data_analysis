@@ -5,6 +5,8 @@ import json
 import time
 import random
 import logging
+import csv
+import re
 from fake_useragent import UserAgent
 
 logging.basicConfig(level=logging.INFO,#控制台打印的日志级别
@@ -13,7 +15,7 @@ logging.basicConfig(level=logging.INFO,#控制台打印的日志级别
                     format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s' #日志格式
                     )
 
-ua = UserAgent(verify_ssl=False, use_cache_server=False)
+ua = UserAgent(verify_ssl=False)
 count = 1
 # 每次抓取评论数，猫眼最大支持30
 limit = 30
@@ -33,6 +35,12 @@ def get_url():
 def write_txt(str):
     with open('comment.txt', 'a') as f:
         f.write(str)
+
+
+def write_csv(datetime, comment):
+    with open('comment.csv', 'a', newline='') as f:
+        writer = csv.writer(f, delimiter=';')
+        writer.writerow([datetime, comment])
 
 
 def write_url(str):
@@ -74,10 +82,12 @@ def parse_json(data):
             offset = 0
             return get_url()
         else:
-            content = comment['content'].strip().replace('\n', '。')
+            content = re.sub("[\r\n|\r|\n|;]", "。", comment['content'].strip()) #comment['content'].strip().replace('\n', '。')
+            # content = re.sub("[\s+\.\!\/_,$%^*()+\"\'\?]+|[+——！，。？、~@#￥%……&*（）【】；：]+|\[.+\]|\［.+\］", "", comment['content'].strip())
             logging.info('get comment ' + str(count))
             count += 1
-            write_txt(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment_time/1000)) + '##' + content + '\n')
+            write_csv(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment_time/1000)), content)
+            # write_txt(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment_time/1000)) + '##' + content + '\n')
     if res['paging']['hasMore']:
         offset += limit
         return get_url()
