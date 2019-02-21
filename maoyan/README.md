@@ -29,5 +29,15 @@
 - 坑与建议
     - 1、`matplot`默认不支持中文，需进行配置，详见代码中配置部分，选择一种即可。
 
+### 按日期分析情感评分
+`sentiment_analysis.py`
+- 使用说明
+    - 1、需先运行`get_comments.py`获取评论csv文件。
+    - 2、运行`python3 sentiment_analysis.py`即可。
+    
+- 坑与建议
+    - 1、情感分析需要使用snowNLP包，由于获取的评论很多，需要耗时较长，建议使用服务器运行。
+    - 2、snowNLP目前情感分析并不准确，仅供学习使用。
+
 ### 关于防止被网站屏蔽
 - 1、修改useragent，比如可以用fake_useragent包，但需要注意的是加载这个包的时候默认会去服务器更新，需要翻墙，建议创建的时候使用`ua = UserAgent(use_cache_server=False)`停用cache服务器。如果仍然报错，可以尝试改成`ua = UserAgent(use_cache_server=False, verify_ssl=False)`。
