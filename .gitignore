@@ -67,4 +67,5 @@ target/
 *.csv
 *.xls
 *.png
-
+weixin/text/
+weixin/articles/
