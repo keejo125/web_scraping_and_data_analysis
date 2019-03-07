@@ -22,15 +22,17 @@ def timeline_plot():
     cacu = df.resample("MS").count()
 
     # 画图
-    fig, ax = plt.subplots(figsize=[20, 5])
+    fig, ax = plt.subplots(figsize=[18, 5])
 
     # 线条
+    from pandas.plotting import register_matplotlib_converters
+    register_matplotlib_converters()
     ax.plot(cacu, 'o-')
 
     # fig.autofmt_xdate()
 
     # 通过设置中文字体方式解决中文展示问题
-    font = FontProperties(fname='../font/PingFang.ttc')
+    font = FontProperties(fname='../font/PingFang.ttc', size=18)
     ax.set_title("新世相文章统计", fontproperties=font)
     ax.set_xlabel("日期", fontproperties=font)
     ax.set_ylabel("文章数", fontproperties=font)
@@ -46,8 +48,17 @@ def timeline_plot():
     # ax.xaxis.grid(True, which="minor")
     # ax.yaxis.grid()
     # 显示数值
-    for a,b in zip(cacu.index, cacu.values):
-        ax.text(a, b, b[0])
+    # 显示全部数值
+    # for a,b in zip(cacu.index, cacu.values):
+    #     ax.text(a, b, b[0])
+    # 显示最大值
+    x = cacu['title'].idxmax()
+    y = cacu['title'].max()
+    ax.text(x, y, y, verticalalignment='bottom', horizontalalignment='center', fontsize='large')
+    # plt.annotate(y, xy=(x,y))
+    # 保存图片
+    plt.savefig('timeline_analysis.png')
+    # 显示图片
     plt.show()
 
 
