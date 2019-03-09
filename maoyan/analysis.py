@@ -32,7 +32,7 @@ def pandas_analysis():
     # pltz.ylabel("评论数")
 
     # 通过设置中文字体方式解决中文展示问题
-    font = FontProperties(fname='../font/PingFang.ttc')
+    font = FontProperties(fname='../common/font/PingFang.ttc')
     plt.title("流浪地球评论分析", fontproperties=font)
     plt.xlabel("日期", fontproperties=font)
     plt.ylabel("评论数", fontproperties=font)

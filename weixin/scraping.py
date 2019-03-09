@@ -98,7 +98,7 @@ def get_articles():
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option('prefs', profile)
     chrome_options.add_argument('--kiosk-printing')
-    driver = webdriver.Chrome(executable_path='./chromedriver', options=chrome_options)
+    driver = webdriver.Chrome(executable_path='../common/chromedriver', options=chrome_options)
     driver.implicitly_wait(60)
     count = 1
     with open('articles.csv', newline='') as csvfile:

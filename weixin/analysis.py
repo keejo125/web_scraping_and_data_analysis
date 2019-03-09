@@ -32,7 +32,7 @@ def timeline_plot():
     # fig.autofmt_xdate()
 
     # 通过设置中文字体方式解决中文展示问题
-    font = FontProperties(fname='../font/PingFang.ttc', size=18)
+    font = FontProperties(fname='../common/font/PingFang.ttc', size=18)
     ax.set_title("新世相文章统计", fontproperties=font)
     ax.set_xlabel("日期", fontproperties=font)
     ax.set_ylabel("文章数", fontproperties=font)
