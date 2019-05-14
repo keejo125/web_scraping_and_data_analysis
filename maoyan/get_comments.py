@@ -17,8 +17,8 @@ logging.basicConfig(level=logging.INFO,#控制台打印的日志级别
 
 ua = UserAgent(verify_ssl=False)
 count = 1
-# 每次抓取评论数，猫眼最大支持30
-limit = 30
+# 每次抓取评论数，猫眼最大支持15
+limit = 15
 # 流浪地球
 movieId = '248906'
 ts = 0
@@ -67,27 +67,16 @@ def parse_json(data):
     global offset
     global limit
     global ts
-    ts_duration = ts
     res = json.loads(data)
+    ts = res['ts']
     comments = res['data']['comments']
     for comment in comments:
         comment_time = comment['time']
-        if ts == 0:
-            ts = comment_time
-            ts_duration = comment_time
-        if comment_time != ts and ts == ts_duration:
-            ts_duration = comment_time
-        if comment_time !=ts_duration:
-            ts = ts_duration
-            offset = 0
-            return get_url()
-        else:
-            content = re.sub("[\r\n|\r|\n|;]", "。", comment['content'].strip()) #comment['content'].strip().replace('\n', '。')
-            # content = re.sub("[\s+\.\!\/_,$%^*()+\"\'\?]+|[+——！，。？、~@#￥%……&*（）【】；：]+|\[.+\]|\［.+\］", "", comment['content'].strip())
-            logging.info('get comment ' + str(count))
-            count += 1
-            write_csv(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment_time/1000)), content)
-            # write_txt(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment_time/1000)) + '##' + content + '\n')
+        content = re.sub("[\r\n|\r|\n|;]", "。", comment['content'].strip()) #comment['content'].strip().replace('\n', '。')
+        # content = re.sub("[\s+\.\!\/_,$%^*()+\"\'\?]+|[+——！，。？、~@#￥%……&*（）【】；：]+|\[.+\]|\［.+\］", "", comment['content'].strip())
+        logging.info('get comment ' + str(count))
+        count += 1
+        write_csv(time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(comment_time/1000)), content)
     if res['paging']['hasMore']:
         offset += limit
         return get_url()
